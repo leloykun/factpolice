@@ -19,3 +19,4 @@ google-auth-oauthlib==0.2.0
 requests
 pyasn1
 selenium
+urllib2
