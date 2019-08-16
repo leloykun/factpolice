@@ -8,7 +8,7 @@ import random
 import requests
 from flask import Flask, request
 
-import urllib2
+import urllib.request as urllib2
 import re
 
 app = Flask(__name__)
