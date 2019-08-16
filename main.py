@@ -8,7 +8,7 @@ import random
 import requests
 from flask import Flask, request
 
-import urllib.request as urllib2
+import urllib.request
 import re
 
 app = Flask(__name__)
@@ -32,19 +32,17 @@ def verify():
 
 def is_url(url):
     try:
-        if not urllib2.urlparse.urlparse(url).netloc:
-            return False
-
-        website = urllib2.urlopen(url)
-        if website.code != 200 :
-            return False
-    except Exception, e:
+        with urllib.request.urlopen(url) as response:
+            return response.code == 200
+    except:
         print("Errored while attempting to validate link : ", url)
-        print(e)
         return False
     return True
 
 def extract_content(url):
+    data = {'url': url}
+    res = requests.post('http://34.66.208.239:8081/get_article_contents', json=data)
+    print(res)
     return url
 
 def calc_regularity(text):
@@ -75,6 +73,9 @@ def webhook():
                 if messaging_event.get("message"):  # someone sent us a message
 
                     message_text = messaging_event["message"]["text"]  # the message's text
+
+                    print(message_text)
+                    print(is_url(message_text))
 
                     if is_url(message_text):
                         message_text = extract_content(message_text)
